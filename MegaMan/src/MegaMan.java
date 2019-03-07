@@ -93,7 +93,7 @@ public class MegaMan {
 		//Panel
 		final JPanel gamepanel = new JPanel();
 		gamepanel.setLayout(null);
-		gamepanel.setBackground(Color.GRAY);
+		gamepanel.setBackground(Color.RED);
 		
 		//Background
 		ImageIcon backgroundpic = new ImageIcon("C:\\Users\\Asmir\\Pictures\\Java Pics\\SampleMap.png");
