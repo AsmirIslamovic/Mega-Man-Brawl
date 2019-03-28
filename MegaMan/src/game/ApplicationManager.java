@@ -2,12 +2,12 @@ package game;
 
 import javax.swing.*;
 
-public class GameManager {
-    private static GameManager instance = null;
+public class ApplicationManager {
+    private static ApplicationManager instance = null;
     private static Window window;
     private static PanelManager panelManager;
 
-    private GameManager()
+    private ApplicationManager()
     {
         window = Window.getInstance();
         panelManager = PanelManager.getInstance();
@@ -27,7 +27,7 @@ public class GameManager {
         while (true)
         {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(10);
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -37,10 +37,10 @@ public class GameManager {
         }
     }
 
-    public static GameManager getInstance()
+    public static ApplicationManager getInstance()
     {
         if (instance == null)
-            instance = new GameManager();
+            instance = new ApplicationManager();
 
         return instance;
     }

@@ -6,7 +6,7 @@ import java.awt.*;
 public class Window {
 
     private static Window instance = null;
-    private static JFrame window;
+    public static JFrame window;
 
     private static int WINDOW_WIDTH = 700;
     private static int WINDOW_HIGHT = 424;
@@ -19,7 +19,7 @@ public class Window {
 
     public static void add(JPanel x)
     {
-        window.add(x);
+        window.getContentPane().add(x);
         window.setVisible(true);
         window.requestFocus();
     }

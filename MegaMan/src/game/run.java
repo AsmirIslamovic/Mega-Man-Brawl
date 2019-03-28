@@ -4,9 +4,12 @@ public class run {
 
     public static void main(String[] args)
     {
-        GameManager gameManager = GameManager.getInstance();
-        gameManager.setup();
-        gameManager.flash();
+        ApplicationManager appManager = ApplicationManager.getInstance();
+        appManager.setup();
+//        appManager.flash();
+
+        ImageLoader load = new ImageLoader("/assets/");
+        System.out.println(load.size());
     }
 
 }
