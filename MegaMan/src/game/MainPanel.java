@@ -1,94 +1,18 @@
 package game;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 
 public class MainPanel extends JPanel {
     private static MainPanel instance = null;
     private static JPanel panel;
-
-    private static int x;
-    private static int y;
-
+    ImageLoader imageLoader = ImageLoader.getInstance();
 
     private MainPanel()
     {
-        panel = new JPanel();
-        panel.setLayout(null);
-        panel.setBackground(Color.RED);
-        panel.setName("Main");
-
-        ImageIcon icon = new ImageIcon("../assets/megaman1.png");
-        if (icon.getImage() != null){
-            System.out.println("There's an image");
-            System.out.println(icon.getImage());
-        }
-        final JLabel wIcon = new JLabel();
-
-        ImageLoader gif = new ImageLoader("/assets/running/" );
-
-        wIcon.setIcon(gif.getIcons().get(0));
-        wIcon.setBounds(x,y,40,50);
-
-        try {
-            BufferedImage i = ImageIO.read(this.getClass().getResource("../assets/running.gif"));
-            Icon ii = new ImageIcon(i);
-            wIcon.setIcon(ii);
-            wIcon.setBounds(x,y,40,50);
-
-            Thread running = new Thread()
-            {
-                public void run() {
-                    int i = 0;
-                    while(true)
-                    {
-                        wIcon.setIcon(gif.getIcons().get(i));
-                        if(i < gif.size() -1)
-                        {
-                            i++;
-                        } else{
-                            i=0;
-                        }
-                        try{
-                            Thread.sleep(150);
-                        }
-                        catch (Exception e)
-                        {
-
-                        }
-                    }
-                }
-            };
-            running.start();
-        }
-        catch (Exception e) {
-
-        }
-
-
-
-
-        JLabel label = new JLabel("TEST",icon,10);
-        label.setBounds(50,50,40,50);
-        label.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                System.out.println("Yay you clicked me");
-                PanelManager.switchPanels();
-                ApplicationManager.getInstance().setup();
-            }
-
-        });
-
-        addComponent(label);
-        addComponent(wIcon);
-
+        setup();
     }
 
     public static JPanel getPanel()
@@ -96,12 +20,80 @@ public class MainPanel extends JPanel {
         return panel;
     }
 
-    public static void addComponent(Component c)
+    private void setup()
+    {
+        panel = new JPanel();
+        panel.setLayout(null);
+        panel.setBackground(Color.RED);
+        panel.setName("Main");
+
+        ImageIcon backgroundIcon = imageLoader.get("/assets/background.png");
+        Image backgroundImage = backgroundIcon
+                .getImage()
+                .getScaledInstance(Window.getWindowWidth(), Window.getWindowHeight(), Image.SCALE_SMOOTH);
+        JLabel backgroundLabel = new JLabel(new ImageIcon(backgroundImage));
+        backgroundLabel.setBounds(0,0,Window.getWindowWidth(), Window.getWindowHeight());
+
+        ImageIcon playIcon = imageLoader.get("/assets/play.gif");
+        JLabel playLabel = new JLabel(playIcon);
+
+
+        int playButtonX = Window.getWindowWidth()/2 - playIcon.getIconWidth()/2;
+        int playButtonY = 2*Window.getWindowHeight()/3 - playIcon.getIconHeight()/2;
+
+        playLabel.setBounds(playButtonX,playButtonY,playIcon.getIconWidth(),playIcon.getIconHeight());
+        playLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                PanelManager.switchPanels();
+                ApplicationManager.getInstance().setup();
+            }
+
+        });
+        //border
+        //playLabel.setBorder(BorderFactory.createLineBorder(Color.BLUE,5));
+        playLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                System.out.println("HOVERING");
+
+                int width = playIcon.getIconWidth();
+                int height = playIcon.getIconHeight();
+
+                int xOffset = (int)(0.1*width);
+                int yOffset = (int)(0.1*height);
+                int newWidth = width + 2*xOffset;
+                int newHeight = height+ 2*yOffset;
+
+                playLabel.setBounds(playButtonX - xOffset,playButtonY - yOffset ,newWidth,newHeight);
+                Image playImage = playIcon
+                        .getImage()
+                        .getScaledInstance(playLabel.getWidth(), playLabel.getHeight(), Image.SCALE_SMOOTH);
+                playLabel.setIcon(new ImageIcon(playImage));
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                playLabel.setBounds(playButtonX,playButtonY,playIcon.getIconWidth(),playIcon.getIconHeight());
+                Image playImage = playIcon
+                        .getImage()
+                        .getScaledInstance(playLabel.getWidth(), playLabel.getHeight(), Image.SCALE_SMOOTH);
+                playLabel.setIcon(new ImageIcon(playImage));
+            }
+
+        });
+
+        addComponent(playLabel,0);
+        addComponent(backgroundLabel,1);
+    }
+
+    public static void addComponent(Component c, int index)
     {
         if( c!= null)
         {
             panel.add(c);
-            panel.setComponentZOrder(c,0);
+            panel.setComponentZOrder(c,index);
         }
     }
 

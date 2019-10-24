@@ -17,9 +17,10 @@ public class ApplicationManager {
     public static void setup()
     {
         JPanel currentPanel = panelManager.getCurrentPanel();
-        System.out.println(currentPanel.getName());
         currentPanel.setVisible(true);
         window.add(currentPanel);
+        currentPanel.setFocusable(true);
+        currentPanel.requestFocusInWindow();
     }
 
     public static void flash()

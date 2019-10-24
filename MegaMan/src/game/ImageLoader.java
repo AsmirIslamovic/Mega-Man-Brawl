@@ -8,9 +8,47 @@ import java.io.FilenameFilter;
 import java.util.HashMap;
 
 public class ImageLoader {
-    private HashMap<Integer, ImageIcon> icons = new HashMap<>();
+    private static ImageLoader instance = null;
 
 
+    private ImageLoader() { }
+
+    public ImageIcon get(String fileName)
+    {
+        ImageIcon icon = null;
+        try
+        {
+            BufferedImage image = ImageIO.read(this.getClass().getResource(fileName));
+            icon = new ImageIcon(image);
+        }
+        catch (Exception e)
+        {
+
+        }
+        return icon;
+    }
+
+    public HashMap<Integer, ImageIcon> getAll(String folderName){
+        HashMap<Integer, ImageIcon> icons = new HashMap<>() ;
+        try {
+            File folder = new File(this.getClass().getResource(folderName).toURI());
+            if (folder.isDirectory()) {
+                for (final File f : folder.listFiles(IMAGE_FILTER)) {
+
+                    BufferedImage img = ImageIO.read(f);
+
+                    ImageIcon icon = new ImageIcon(img);
+
+                    int index = Integer.parseInt(f.getName().split("\\.")[0]);
+                    System.out.println(index);
+
+                    icons.put(index, icon);
+                }
+            }
+        }
+        catch (Exception e) { }
+        return icons;
+    }
     static final String[] EXTENSIONS = new String[]{
             "gif", "png", "bmp" // and other formats you need
     };
@@ -26,37 +64,14 @@ public class ImageLoader {
             }
             return (false);
         }
+
     };
 
-    public ImageLoader(String folderName)
+    public static ImageLoader getInstance()
     {
-        try {
-            File folder = new File(this.getClass().getResource(folderName).toURI());
-            if (folder.isDirectory()) {
-                for (final File f : folder.listFiles(IMAGE_FILTER)) {
+        if (instance == null)
+            instance = new ImageLoader();
 
-                    BufferedImage img = null;
-                    img = ImageIO.read(f);
-
-                    ImageIcon icon = new ImageIcon(img);
-
-                    int index = Integer.parseInt(f.getName().split("\\.")[0]);
-
-                    icons.put(index, icon);
-                }
-            }
-        }
-        catch (Exception e) { }
+        return instance;
     }
-
-    public int size()
-    {
-        return icons.size();
-    }
-
-    public HashMap<Integer, ImageIcon> getIcons()
-    {
-        return icons;
-    }
-
 }

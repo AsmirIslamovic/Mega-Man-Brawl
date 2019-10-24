@@ -8,8 +8,8 @@ public class run {
         appManager.setup();
 //        appManager.flash();
 
-        ImageLoader load = new ImageLoader("/assets/");
-        System.out.println(load.size());
+//        ImageLoader load = new ImageLoader("/assets/");
+//        System.out.println(load.size());
     }
 
 }
